@@ -1,0 +1,67 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>🦦 Email Generator</title>
+  <meta name="description" content="Email generator">
+  <meta name="author" content="fireph">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+  <style>
+  	body {
+  		background-color: #2d2d2d;
+  	}
+  	p {
+  		color: white;
+  		font-size: xx-large;
+  	}
+  </style>
+</head>
+<body>
+	<p id="email"></p>
+	<button type="button" onclick="stringGen(4)">Generate!</button>
+	<button type="button" onclick="copyToClipboard()">Copy</button>
+	<button type="button" onclick="storeToLocalStorage()">Store</button>
+  <script>
+  	function stringGen(len) {
+		  var email = "";
+		  var charset = "abcdefghijklmnopqrstuvwxyz";
+		  var storedEmails = JSON.parse(localStorage.getItem("emails"));
+		  if (!Array.isArray(storedEmails)) {
+		  	storedEmails = [];
+		  }
+		  while (email.length === 0 || storedEmails.indexOf(email) > -1) {
+		  	email = ""
+			  for (var i = 0; i < len; i++) {
+			    email += charset.charAt(Math.floor(Math.random() * charset.length));
+				}
+			}
+			document.getElementById("email").innerText = email;
+		}
+
+		function copyToClipboard() {
+		  var email = document.getElementById("email").innerText;
+		  navigator.clipboard.writeText(email).then(function() {
+			  console.log('Copying to clipboard was successful!');
+			}, function(err) {
+			  console.error('Could not copy text: ', err);
+			});
+		}
+
+		function storeToLocalStorage() {
+			var email = document.getElementById("email").innerText;
+			var storedEmails = JSON.parse(localStorage.getItem("emails"));
+			if (!Array.isArray(storedEmails)) {
+		  	storedEmails = [];
+		  }
+			if (email.length > 0 && storedEmails.indexOf(email) === -1) {
+				storedEmails.push(email)
+				localStorage.setItem("emails", JSON.stringify(storedEmails));
+			} else {
+				console.error('Email already stored!');
+			}
+		}
+  </script>
+</body>
+</html>
